@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Git+Obsidian维护本库.md",
+                "file": "书摘/文学/哈利波特.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Git+Obsidian维护本库.md",
+                "file": "书摘/文学/哈利波特.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Git+Obsidian维护本库.md",
+                "file": "书摘/文学/哈利波特.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Git+Obsidian维护本库.md"
+                "file": "书摘/文学/哈利波特.md"
               }
             }
           }
@@ -148,9 +148,9 @@
   },
   "active": "10da1a9b7a0a3a52",
   "lastOpenFiles": [
+    "Git+Obsidian维护本库.md",
     "书摘/文学/哈利波特.md",
     "书摘/文学",
-    "书摘",
-    "Git+Obsidian维护本库.md"
+    "书摘"
   ]
 }
