@@ -1,0 +1,5 @@
+全部QApplication的style可以使用QApplication::setStyle来指定样式，也可以为单独的QWidget调用setStyle来指定样式
+# 自定义风格
+静态方法，从已有的QStyle类继承，重载某个虚函数
+动态方法，运行时动态修改系统style，参考QProxyStyle
+静态方法中，最常用的基类是QCommonStyle，可以设置全部自定义样式。也可以用QProxyStyle，重载需要的虚函数。重载虚函数之后，调用static函数QApplication::setStyle在创建QApplication实例对象之前就指定好自定义样式。

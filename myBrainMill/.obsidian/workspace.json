@@ -13,10 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "书摘/文学/哈利波特.md",
+                "file": "https.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "https"
             }
           }
         ]
@@ -38,8 +40,11 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
-              }
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
             }
           },
           {
@@ -54,7 +59,9 @@
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
             }
           },
           {
@@ -62,7 +69,9 @@
             "type": "leaf",
             "state": {
               "type": "bookmarks",
-              "state": {}
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
             }
           }
         ]
@@ -85,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "书摘/文学/哈利波特.md",
+                "file": "输入方案/reStructuredText.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -93,7 +102,9 @@
                 "searchQuery": "",
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-coming-in",
+              "title": "reStructuredText 的反向链接列表"
             }
           },
           {
@@ -102,10 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "书摘/文学/哈利波特.md",
+                "file": "输入方案/reStructuredText.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-going-out",
+              "title": "reStructuredText 的出链列表"
             }
           },
           {
@@ -115,8 +128,12 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true
-              }
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
             }
           },
           {
@@ -125,8 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "书摘/文学/哈利波特.md"
-              }
+                "file": "输入方案/reStructuredText.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "reStructuredText 的大纲"
             }
           }
         ]
@@ -138,19 +160,51 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "daily-notes:Open today's daily note": false,
-      "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
     }
   },
   "active": "10da1a9b7a0a3a52",
   "lastOpenFiles": [
     "Git+Obsidian维护本库.md",
-    "书摘/文学/哈利波特.md",
-    "书摘/文学",
-    "书摘"
+    "法语生词本导入用.md",
+    "摘要/文学/哈利波特.md",
+    "摘要/体育/青少年运动员体能训练.md",
+    "摘要/科学/SELF.md",
+    "输入方案/Sphinx.md",
+    "输入方案/reStructuredText.md",
+    "输入方案/obsidian-md.md",
+    "输入方案",
+    "编程/杂/SourceInsight4.md",
+    "编程/杂/CMake.md",
+    "编程/杂/字符编码.md",
+    "编程/杂/显示器的问题.md",
+    "编程/杂/图像文件.md",
+    "编程/杂/共享文件夹.md",
+    "编程/Computer Vision/OpenCV Calibration.md",
+    "编程/Computer Vision/OpenCV.md",
+    "编程/cpp/chrono.md",
+    "编程/DirectX/Introduction to 3D Game Programming with DirectX12.md",
+    "编程/DirectX/Introduction to 3D Game Programming with DirectX11.md",
+    "编程/Graphics/vmath.md",
+    "编程/Graphics/UE4.md",
+    "编程/Graphics/glm.md",
+    "编程/Graphics/gl3w.md",
+    "编程/OSG/virtualPlanetBuilder.md",
+    "编程/OSG/UE4.md",
+    "编程/OSG/osgEarth学习.md",
+    "编程/加密授权",
+    "编程/Windows",
+    "编程/SDL",
+    "编程/Qt",
+    "编程/OSG",
+    "编程/Graphics",
+    "编程/DirectX",
+    "编程/cpp",
+    "编程/Computer Vision"
   ]
 }

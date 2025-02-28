@@ -1,0 +1,5 @@
+与HTML的css类似，设置widget的风格
+QApplication::setStyleSheet为全部程序设置风格
+QWidget::setStyleSheet为某个窗口设置风格
+- 比QPalette更强大，假如想设置QButton背景为红色，StyleSheet能保证在所有style下，QButton背景都是红色。
+- 无需继承QStyle，可以方便地为程序设定另一种风格
