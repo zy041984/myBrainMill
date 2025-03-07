@@ -1,0 +1,5 @@
+# Web Map Tile Service Implementation Standard
+## introduction
+WMS侧重点是服务器按照客户端的需求渲染并提供图像，这样服务器压力很大
+WTMS解决策略是预先把图像切片，客户端只能根据可视范围要求服务器当前有的图片，自己回去渲染合成
+WTMS靠getCapabilityes来告诉客户我有什么，这个内容是标准化的，所有的服务器客户端都可以按照统一标准提高互操作性。
