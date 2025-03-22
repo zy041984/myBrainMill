@@ -1,6 +1,6 @@
 # 下载
 https://github.com/gabime/spdlog/releases
-# 编译
+# 编译版本
 - cmake3.26.5
 - 选中FETCHCONTENT_FULLY_DISCONNECTED避免从网上下载源代码
 - 选中 BUILD_SHARED,
@@ -75,3 +75,15 @@ spdlog::info("Welcome to //spdlog version {}.{}.{}  !", SPDLOG_VER_MAJOR, SPDLOG
 // This is optional (only mandatory if using windows + async log).
 //spdlog::shutdown();
 ```
+# 版本1.15.1
+## 编译
+### cmake选项
+取消cpack
+选中BUILD_SHARED,INSTALL,MSVC_UTF8,USE_STD_FMT,WCHAR_CONSOLE,WCHAR_FILENAMES,WCHAR_SUPPORT,FWRITE_UNLOCKED
+### 用msvc2022 x64
+编译spdlog成功，生成了dll和lib
+example如果要成功，需要把某些字符串前面加L变成wchar，运行看起来成功了
+install成功
+## 使用
+同上面例子
+加入定义SPDLOG_USE_STD_FORMAT，选择c++20
