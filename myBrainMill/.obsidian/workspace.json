@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "4184ee3c64b4f522",
+        "id": "a35f51657994f7a6",
         "type": "tabs",
         "children": [
           {
-            "id": "dec2be67ff2c0d5e",
+            "id": "a5e03e1bc3e7c99a",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "法语生词本导入用.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "法语生词本导入用"
+              "title": "新标签页"
             }
           }
         ]
@@ -168,15 +164,20 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "32e0078ce3454cff",
+  "active": "a5e03e1bc3e7c99a",
   "lastOpenFiles": [
+    "摘要/文学/哈利波特.md",
+    "法语生词本导入用.md",
+    "Git+Obsidian维护本库.md",
+    "https.md",
+    "编程/3rdParty/yaml-cpp.md",
+    "编程/Windows/windows file recovery.md",
     "编程/3rdParty/spdLog.md",
     "输入方案/reStructuredText.md",
     "输入方案/Sphinx.md",
     "输入方案/obsidian-md.md",
     "编程/3rdParty/vrpn.md",
     "编程/Qt/Qt Installer Framework.md",
-    "法语生词本导入用.md",
     "编程/3rdParty/FFMpeg.md",
     "GIS/Geoserver.md",
     "编程/Qt/QPainter.md",
@@ -191,16 +192,6 @@
     "编程/Qt/Qt.md",
     "编程/3rdParty/CTK.md",
     "编程/OSG/osgEarth学习.md",
-    "编程/OSG/osg和qt.md",
-    "编程/OSG/OpenSceneGraph编译.md",
-    "编程/OSG/OpenSceneGraph.md",
-    "编程/OSG/gltf.md",
-    "编程/OSG/学习结果.md",
-    "编程/OSG/倾斜摄影.md",
-    "编程/OSG/编译.md",
-    "编程/OSG/35讲.md",
-    "编程/OSG/3d tiles.md",
-    "编程/OSG/UE4.md",
     "GIS",
     "GIS",
     "输入方案",
