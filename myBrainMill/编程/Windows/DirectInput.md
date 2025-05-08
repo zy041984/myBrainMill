@@ -27,3 +27,53 @@ Device对象，描述DirectInputDevice对象上的一个按钮，摇杆等
 2. joystick的axis数据要自行判断死区和饱和区。也可以使用CPOINT结构来指定axis的输出曲线
 # 版本
  IDirectInputDevice8接口中需要指定基于DirectX的版本号，宏DIRECTINPUT_VERSION默认为0x0080，
+# 查询GUID和连接状态
+GUID可以用DIDEVICEINSTANCE::guidInstance获得
+`LPDIRECTINPUT8::GetDeviceStatus`可以查询当前手柄连接状态,形参为GUID。
+poll函数不能在循环中无脑调用，最好先调用`LPDIRECTINPUT8::GetDeviceStatus`，手柄当前正常连接，再调用`LPDIRECTINPUTDEVICE8::poll`和`LPDIRECTINPUTDEVICE8::GetDeviceState`获得手柄数据
+# 配置摇杆
+设置axis为abs
+```
+DIPROPDWORD dipdw;
+dipdw.diph.dwSize = sizeof(DIPROPDWORD);
+dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+dipdw.diph.dwObj = 0; // device property 
+dipdw.diph.dwHow = DIPH_DEVICE;
+hr = mJoystick[i]->GetProperty(DIPROP_AXISMODE, &dipdw.diph);
+if (hr != DI_OK)
+{
+	spdlog::info("GetProperty failed joystick {}", i);
+	return;
+}
+if (dipdw.dwData != DIPROPAXISMODE_ABS)
+{
+	DIPROPDWORD dipdw;
+	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
+	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+	dipdw.diph.dwObj = 0; // device property 
+	dipdw.diph.dwHow = DIPH_DEVICE;
+	dipdw.dwData = DIPROPAXISMODE_ABS;
+	hr = mJoystick[i]->SetProperty(DIPROP_AXISMODE, &dipdw.diph);
+	if (hr != DI_OK)
+	{
+		spdlog::info("SetProperty DIPROP_AXISMODE failed joystick {}", i);
+		return;
+	}
+}
+```
+设置axis_X的deadzone
+```
+	int dz{ 200 };
+	DIPROPDWORD dipdw;
+	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
+	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+	dipdw.diph.dwObj = DIJOFS_X;
+	dipdw.diph.dwHow = DIPH_BYOFFSET;
+	dipdw.dwData = dz;
+	hr = mJoystick[i]->SetProperty(DIPROP_DEADZONE, &dipdw.diph);
+	if (hr != DI_OK)
+	{
+		spdlog::info("SetProperty DIPROP_DEADZONE x failed joystick{}", i);
+		return;
+	}
+```

@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "a35f51657994f7a6",
+        "id": "bfbad0dfaf59a53e",
         "type": "tabs",
         "children": [
           {
-            "id": "a5e03e1bc3e7c99a",
+            "id": "23d069bcda13eb0b",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "编程/Qt/Qt Installer Framework.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "Qt Installer Framework"
             }
           }
         ]
@@ -164,34 +168,34 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "a5e03e1bc3e7c99a",
+  "active": "23d069bcda13eb0b",
   "lastOpenFiles": [
-    "摘要/文学/哈利波特.md",
-    "法语生词本导入用.md",
     "Git+Obsidian维护本库.md",
-    "https.md",
-    "编程/3rdParty/yaml-cpp.md",
-    "编程/Windows/windows file recovery.md",
-    "编程/3rdParty/spdLog.md",
-    "输入方案/reStructuredText.md",
-    "输入方案/Sphinx.md",
-    "输入方案/obsidian-md.md",
-    "编程/3rdParty/vrpn.md",
-    "编程/Qt/Qt Installer Framework.md",
-    "编程/3rdParty/FFMpeg.md",
-    "GIS/Geoserver.md",
-    "编程/Qt/QPainter.md",
-    "编程/Qt/QPaintDevice.md",
-    "编程/Qt/QImage.md",
+    "法语生词本导入用.md",
+    "编程/Qt/QPixmap.md",
     "编程/Qt/Paint System.md",
-    "编程/Qt/下载地址.md",
-    "编程/Qt/安装.md",
-    "编程/Qt/QWiget.md",
-    "编程/Qt/QStyleSheet.md",
-    "编程/Qt/QStyle.md",
-    "编程/Qt/Qt.md",
-    "编程/3rdParty/CTK.md",
+    "编程/OSG/osg输出中文的text.md",
     "编程/OSG/osgEarth学习.md",
+    "编程/Windows/设备管理.md",
+    "编程/Windows/DirectInput.md",
+    "编程/杂/SourceInsight4.md",
+    "编程/杂/CMake.md",
+    "编程/杂/字符编码.md",
+    "编程/杂/显示器的问题.md",
+    "编程/杂/图像文件.md",
+    "编程/杂/共享文件夹.md",
+    "编程/3rdParty/yaml-cpp.md",
+    "输入方案/Sphinx.md",
+    "输入方案/reStructuredText.md",
+    "输入方案/obsidian-md.md",
+    "编程/Windows/XInput.md",
+    "编程/Windows/windows32 DeskTop APP开发.md",
+    "编程/Windows/windows11开启虚拟机.md",
+    "编程/Windows/windows file recovery.md",
+    "编程/Windows/VCPKG.md",
+    "编程/Windows/vc redistributable.md",
+    "编程/Windows/PE.md",
+    "编程/Windows/GameInput.md",
     "GIS",
     "GIS",
     "输入方案",
