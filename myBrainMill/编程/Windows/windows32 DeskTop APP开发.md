@@ -12,6 +12,8 @@ https://learn.microsoft.com/zh-CN/windows/win32/inputdev/user-input
 键盘布局
 窗口如何获得键盘焦点
 如何模拟键盘输入，发出一个假消息
+##### 2.3.12.2.3 原始输入
+[原始输入 - Win32 apps | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/win32/inputdev/raw-input)
 # 12 图像和游戏
 
 # 15 系统服务
@@ -121,3 +123,36 @@ GDI Object，进行图形绘制，如brush，bitmap，dc，font，pen，palette�
 - GDI型Object只能有一个handle，不能被子进程继承或其他进程复制。创建该object的进程才可以使用该object
 - 内核Object可以创建多个handle，可以被子进程继承或其他进程复制，只要某进程对该object有访问权限。多个handle的意义在于每个handle可以有不同的访问权限。
 - 内核file object稍有不同，一个硬盘或内存中的file可以有多个file object，每个file object有一个handle，每个进程可以对一个file有多个这样的file object即handle。
+
+统一的设备属性模型
+[统一的设备属性模型 - Windows drivers | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/unified-device-property-model--windows-vista-and-later-)
+
+使用cm系列函数
+[设备和驱动程序安装参考 - Win32 apps | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/win32/api/_devinst/)
+
+# 各种id
+## 设备id
+device-id，设备id，由设备的 _枚举器_ (其 [总线驱动程序](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/kernel/bus-drivers)) 报告的字符串。 一个设备只有一个设备 ID。 设备 ID 的格式与 [硬件 ID](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/hardware-ids) 相同。
+## 硬件id
+hardware-id，硬件id，供应商定义的标识字符串。Windows 使用它来将设备匹配到驱动程序包，如果一个驱动程序包声明了某个硬件ID，则这个驱动程序包可以支持具有该 ID 的设备。
+例PCI\VEN_1000&DEV_0001&SUBSYS_00000000&REV_02
+## 实例id
+instance-id，实例id，是由设备的_枚举器_报告的字符串，并将本设备与计算机上的其他相同类型的设备区分开来。包含序列号信息（如果受基础总线支持）或某种位置信息。
+## 设备实例id
+device-instance-id，设备实例id，系统提供的设备标识字符串，用于在系统中唯一标识设备。使用设备ID、[实例 ID](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/instance-ids) 值和 [**DEVICE_CAPABILITIES**](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_capabilities) 结构的 **UniqueID** 成员计算出来
+例
+一个实例 ID ("1&08") 连接到一个 PCI 设备的设备 ID：
+`PCI\VEN_1000&DEV_0001&SUBSYS_00000000&REV_02\1&08`
+## 容器id
+容器 ID 是系统提供的设备标识字符串，用于唯一对与计算机上安装的单函数或多功能设备关联的功能设备进行分组。
+计算机中安装的物理设备的每个实例都有一个唯一的容器 ID。 表示该物理设备实例上的函数的所有开发节点共享相同的容器 ID
+为设备生成容器 ID 的首选方法是基于特定于总线的唯一 ID。 这是生成容器 ID 的最精确、最可靠的方法。
+# 统一的设备属性模型
+统一的设备属性模型，描述了 _设备实例_、 [设备设置类](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-setup-classes)、 [设备接口类](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-interface-classes)和设备 _接口_
+[设备设置类](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-setup-classes) 提供了一种机制，用于对以相同方式安装和配置的设备进行分组。 例如，所有 CD-ROM 驱动器都属于 CDROM 设置类。这个类感觉就是安装时候用的。
+
+[设备接口类](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-interface-classes) 提供了一种机制，用于根据共享特征或功能对设备进行分组。 驱动程序和用户应用程序可以注册以接收属于特定接口类的任何设备的到达或删除通知，而不是跟踪单个设备在系统中的状态。这个类感觉是用户接收数据时用的。
+
+每个设备设置类都有一个关联的 GUID。 系统定义的安装类 GUID 在 _Devguid.h_ 中定义，通常具有 GUID_DEVCLASS__Xxx_ 形式的符号名称。
+
+用户模式代码可以使用 [**CfgMgr32** 函数](https://learn.microsoft.com/zh-cn/windows/win32/api/cfgmgr32/) (例如， [CM_Get_Device_Interface_List](https://learn.microsoft.com/zh-cn/windows/win32/api/cfgmgr32/nf-cfgmgr32-cm_get_device_interface_listw)) 或 **SetupDi**_Xxx_ 函数 (请参阅 [SetupDi 设备接口函数](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/using-device-installation-functions#ddk-setupdi-device-interface-functions-dg)) 以了解已注册的已启用的设备接口。 然后可以使用 I/O API（如 [CreateFile](https://learn.microsoft.com/zh-cn/windows/win32/api/fileapi/nf-fileapi-createfilew) ）获取设备的句柄，以便向其发送 I/O。 若要获取有关启用和禁用设备接口以及如何响应这些操作的通知，请参阅 [注册设备接口到达和设备删除通知](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/registering-for-notification-of-device-interface-arrival-and-device-removal)。

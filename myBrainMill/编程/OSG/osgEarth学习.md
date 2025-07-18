@@ -287,6 +287,11 @@ struct myCPM :public osg::CullSettings::ClampProjectionMatrixCallback
 };
 viewer->getCamera()->setClampProjectionMatrixCallback(new myCPM);
 ```
+还有个办法
+```
+cam->setComputeNearFarMode(osg::Camera::DO_NOT_COMPUTE_NEAR_FAR);
+cam->setCullingMode(osg::Camera::ENABLE_ALL_CULLING);
+```
 # osgEarth::EarthManipulator的矩阵变换过程：
 1. 平移到_center
 2. 旋转_centerRotation,应该是把OSG场景转到本地ENU
