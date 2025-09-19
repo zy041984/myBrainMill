@@ -1,3 +1,11 @@
+# build
+4.3.5
+cmake 3.26.5
+vs2022 x64
+winSDK10.0.26100.0
+cmake选项，取消了BUILD_TESTS和BUILD_STATIC和CPACK和ENABLE_CPACK和ZMQ_BUILD_TESTS，选中了Enable_DRAFT
+vs中使用了UseMultiByteCharacterSet
+
 [ZeroMQ](https://zeromq.org/)
 [GitHub - zeromq/libzmq: ZeroMQ core engine in C++, implements ZMTP/3.1](https://github.com/zeromq/libzmq)
 [bit.ly](http://bit.ly/ZeroMQ-OReilly)
@@ -89,6 +97,7 @@ publish-subscrib模式，一个publisher可以向多个subscriber发送消息。
 pipeline模式，数据依次从流水线的一个阶段发到下一个阶段，每个阶段可以有若干个节点，这些节点共同收到该阶段的数据。
 peer-to-peer模式，一个peer可以connect到别的peer，也可以监听别的peer的connect。草案阶段。
 request-reply模式，客户端发起request，然后服务器reply。一个客户端可以连接到多个服务器。通信顺序只能是一问一答，如果客户端多问，后面的问可能被阻塞。
+router-dealer两个都是异步的
 ## zmq_bind
 形参socket使用本地的endpoint来接收外来的连接，本地的endpoint可以使用tcp/ipc/inproc/udp/vmci/pgm/epgm连接类型，有些类型的地址可以使用通配符。调用bind之后，socket进入了mute状态，建立连接后进入ready状态。在mute状态下，要么阻塞，要么抛弃消息。
 成功返回0

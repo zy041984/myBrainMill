@@ -1,7 +1,9 @@
 # 下载
 https://github.com/gabime/spdlog/releases
-# 编译版本
+# 1.12.0
+## 编译选项
 - cmake3.26.5
+- vs2022 x64 vc143 WinSDK10.0.26100
 - 选中FETCHCONTENT_FULLY_DISCONNECTED避免从网上下载源代码
 - 选中 BUILD_SHARED,
 - 这几项WCHAR_FILENAMES,WCHAR_SUPPORT,BUILD_TEST均未选中，example才编译通过
@@ -9,12 +11,10 @@ https://github.com/gabime/spdlog/releases
 - 顺序 Zero_check spdlog example all_build install package
 - 看cmakelists.txt，好像**选中了USE_STD_FORMAT就要支持cxx20**
 - 如果没选中USE_STD_FORMAT,没选中SPDLOG_FMT_EXTERNAL，没选中 SPDLOG_FMT_EXTERNAL_HO，include就要多几个bundled的fmt头文件
-# 使用
+## 使用
 见项目TestWinThings\testSpdLog
-
-未知如果log文件名有UTF-8字符，能不能支持
-
-# 代码
+未知如果log文件名有UTF-8字符，能不能支持，后面测试，需要修改选项重新编译
+## 代码
 ```
 //1编译的库定义了SPDLOG_USE_STD_FORMAT，本项目也要定义SPDLOG_USE_STD_FORMAT，且使用c++20
 //定义了SPDLOG_USE_STD_FORMAT必须用c++20
@@ -75,6 +75,27 @@ spdlog::info("Welcome to //spdlog version {}.{}.{}  !", SPDLOG_VER_MAJOR, SPDLOG
 // This is optional (only mandatory if using windows + async log).
 //spdlog::shutdown();
 ```
+## 20250811更新
+更新了windowsAPI，需要重新编译这个库，趁机测试一下能不能输出中文日志，测试结果成功。
+### 编译
+选中WCHAR_FILENAMES,WCHAR_SUPPORT,USE_STD_FORMAT,BUILD_SHARED
+vs的character set选中Unicode
+### 测试工程
+- 编译选项在Preprocess Definition中加入`SPDLOG_WCHAR_TO_UTF8_SUPPORT;SPDLOG_WCHAR_FILENAMES;SPDLOG_USE_STD_FORMAT;_DEBUG;_CONSOLE`
+- 加入`/source-charset:utf-8 /execution-charset:utf-8`同时cpp文件保存选项为UTF8NoBOM，即源文件编码形式为UTF8，exe的执行字符集设置为UTF8
+- vs的character set选中Unicode
+### 测试代码加入
+- 控制台输出中文字符
+`SetConsoleOutputCP(CP_UTF8);`
+- 日志文件名为中文
+- spdlog也可以输出中文
+```
+std::wstring tmpWStr(L"好");
+spdlog::info(L"{}", tmpWStr.c_str());
+spdlog::info(L"中文");
+```
+### 结果
+日志文件名支持中文，文件内容有中文字符，同时控制台也能输出中文。
 # 版本1.15.1
 ## 编译
 ### cmake选项
