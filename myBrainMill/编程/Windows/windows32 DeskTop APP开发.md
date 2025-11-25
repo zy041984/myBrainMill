@@ -15,7 +15,79 @@ https://learn.microsoft.com/zh-CN/windows/win32/inputdev/user-input
 ##### 2.3.12.2.3 原始输入
 [原始输入 - Win32 apps | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/win32/inputdev/raw-input)
 # 12 图像和游戏
+# 13 网络和internet
+## 13.23 WebSocket
+## 13.29 Windows套接字2
+通过网络传输数据，与协议无关
+### 新增功能
+[Windows 套接字的新增内容 - Win32 apps | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/win32/winsock/what-s-new-for-windows-sockets-2)
+针对windows8和server2012等有新增函数
+### 网络协议支持
+### 关于Winsock
+#### 编程注意事项
+##### 体系结构
+### 使用Winsock
+#### winsock入门
+在`Samples\Win7Samples\netds\winsock`中有几个例子，性能从高到低
+- Iocp
+    该文件夹包含三个使用 I/O 完成端口的示例程序。 程序包括：使用 [**WSAAccept**](https://learn.microsoft.com/zh-cn/windows/win32/api/Winsock2/nf-winsock2-wsaaccept) 函数的 Winsock 服务器`iocpserver`;使用 [**AcceptEx**](https://learn.microsoft.com/zh-cn/windows/win32/api/mswsock/nf-mswsock-acceptex) 函数的 Winsock 服务器`iocpserverex`;以及用于测试这些服务器之一的简单多线程 Winsock 客户端`iocpclient`。
+    服务器程序支持多个客户端使用 TCP/IP 进行连接，并发送服务器随后回显到客户端的任意大小的数据缓冲区。 为方便起见，开发了一个简单的客户端程序 `iocpclient`，用于连接并持续将数据发送到服务器，以使用多个线程来施加压力。 使用 I/O 完成端口的 Winsock 服务器提供最高性能。
+- 重叠
+    此文件夹包含使用重叠 I/O 的示例服务器程序。 示例程序使用 [**AcceptEx**](https://learn.microsoft.com/zh-cn/windows/win32/api/mswsock/nf-mswsock-acceptex) 函数和重叠 I/O 有效地处理来自客户端的多个异步连接请求。 服务器使用 **AcceptEx** 函数对单线程 Win32 应用程序中的不同客户端连接进行多路复用。 使用重叠 I/O 可实现更大的可伸缩性。
+- WSAPoll
+    此文件夹包含演示如何使用 [**WSAPoll**](https://learn.microsoft.com/zh-cn/windows/win32/api/winsock2/nf-winsock2-wsapoll) 函数的基本示例程序。 组合的客户端和服务器程序是非阻塞的，并使用 **WSAPoll** 函数确定何时可以在不阻止的情况下发送或接收。 此示例用于说明，不是高性能服务器。
+- 简单
+    此文件夹包含三个演示服务器使用多个线程的基本示例程序。 这些程序包括：一个简单的 TCP/UDP 服务器; `simples`一个仅限 TCP 的服务器， `simples_ioctl`它使用 Win32 控制台应用程序中的 [**select**](https://learn.microsoft.com/zh-cn/windows/win32/api/Winsock2/nf-winsock2-select) 函数来支持多个客户端请求;以及用于测试服务器的客户端 TCP/UDP 程序 `simplec`。 服务器演示了如何使用多个线程来处理多个客户端请求。 此方法存在可伸缩性问题，因为会为每个客户端请求创建单独的线程。
+- accept
+    此文件夹包含基本示例服务器和客户端程序。 服务器演示如何使用 [**select**](https://learn.microsoft.com/zh-cn/windows/win32/api/Winsock2/nf-winsock2-select) 函数使用非阻止接受，或使用 [**WSAAsyncSelect**](https://learn.microsoft.com/zh-cn/windows/win32/api/winsock/nf-winsock-wsaasyncselect) 函数使用异步接受。 此示例用于说明，不是高性能服务器。
+#### 服务器与客户端
+##### 服务器
 
+1. 初始化 Winsock。
+2. 创建套接字。
+3. 绑定套接字。
+4. 侦听客户端的套接字。
+5. 接受来自客户端的连接。
+6. 接收和发送数据。
+7. 断开连接。
+
+[](https://learn.microsoft.com/zh-cn/windows/win32/winsock/about-clients-and-servers#client)
+
+##### 客户端
+
+1. 初始化 Winsock。
+2. 创建套接字。
+3. 连接到该服务器。
+4. 发送和接收数据。
+5. 断开连接。
+##### 客户端断开
+不需要发送，则
+当客户端将数据发送到服务器后，可以调用`shutdown`函数，
+指定SD_SEND关闭套接字的发送端。 
+这允许服务器释放此套接字的某些资源。 
+客户端应用程序仍可接收套接字上的数据
+
+- 一旦调用`shutdown`函数来禁用发送和/或接收，就没有方法可以重新为现有套接字连接启用发送或接收。
+https://learn.microsoft.com/zh-cn/windows/win32/api/winsock/nf-winsock-shutdown
+- 为了确保在连接的套接字关闭之前发送和接收所有数据，应用程序应在调用`closesocket`之前使用`shutdown`来关闭连接。
+- 客户端应用程序完成接收数据后，将调用`closesocket`函数以关闭套接字。
+https://learn.microsoft.com/zh-cn/windows/win32/api/winsock/nf-winsock-closesocket
+- 当套接字之间的连接断开时，应放弃已连接的套接字，并创建新的套接字。 当在连接的套接字上出现问题时，应用程序必须放弃套接字并再次创建套接字，以便返回到稳定点。
+
+总结accept例子
+client，使用`getaddrinfo`来获得可以使用的地址信息集合。遍历这个集合，看看哪个地址信息可以创建`socket`。然后用这个`socket`进行`connect`。
+如果服务器没上线，`connect`会失败
+如果服务器上线，`connect`会成功，然后就可以发送接收了。
+例子里客户端先发送，再`shutdown(SD_SEND)`，再接收。最后`closesocket`
+
+服务器则是`listen`之后，设置非阻塞，然后用`select`监听收到的信息，形成`listenning`或`recv`两个分支。
+分支`listenning`是`accept`成功接收客户端的连接请求，并返回一个socket，为旧的socket设置非阻塞。
+分支`recv`是阻塞式调用recv接收客户的数据，`select`发现可以有数据接收，就会进入这个分支，然后`recv`就可以接收数据了。
+如果客户端发送了`shutdown`，服务器的`select`也可以进入`recv`分支，并且`recv`返回0。服务器知道客户端不再发送，就`closesocket`关闭新生成的socket,没有调用shutdown
+然后服务器再次进入`select`，可以再次等待新的客户端上线`connect`
+
+
+如果客户端send后没有shutdown就直接close，服务器的recv报错100054。然后服务器会关闭通信的socket，还可以再次等待新的客户端上线
 # 15 系统服务
 ## 15.7 DLL
 进程之间共享dll的代码，但是有各自的dll的数据。进程加载dll后把它映射到自己的虚拟地址空间。

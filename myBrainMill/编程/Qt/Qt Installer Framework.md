@@ -31,3 +31,17 @@ installer有几个page，每个被安装的包可以包含脚本，可以离线�
     `C:\Users\Admin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MR`
     两个文件夹里都没有在开始菜单中显示文件夹MR，只能把imagePlayer显示在开始菜单
     这个问题好像是只装一个程序是不能在开始菜单中显示文件夹的，只有装两个程序，才能在开始菜单中显示文件夹
+# 怎么在安装过程中设置注册表
+可以在安装过程中设置注册表项，卸载过程中自动删除这个注册表项
+例如可以设置注册表项使得程序随系统启动。
+- 需要设置的注册表项是在地址`HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`中新建一个项，key可以为exe的文件名，value为字符串形式的exe绝对路径名，注意value的绝对路径名需要加双引号，斜杠要替换为反斜杠，后面还可以加argument
+- 在`packages\com.yonke.XR3DRenderNode\meta\installscript.qs`中的函数`Component.prototype.createOperations = function()`，添加如下内容
+```
+console.log("windows");
+var absPath = qsTr("\"%1\\%2.exe\"").arg(installer.value("TargetDir")).arg(installer.value("ProductName"));
+console.log(absPath);
+//var nativeAbsPath = QDir.toNativeSeparators(absPath);
+var nativeAbsPath=absPath.replace(/\//g, "\\");
+console.log(absPath);
+console.log(nativeAbsPath);            component.addElevatedOperation("GlobalConfig", "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", installer.value("ProductName"), nativeAbsPath);
+```
