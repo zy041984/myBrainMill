@@ -1,3 +1,11 @@
+# build
+4.3.5
+cmake 3.26.5
+vs2022 x64
+winSDK10.0.26100.0
+cmake选项，取消了BUILD_TESTS和BUILD_STATIC和CPACK和ENABLE_CPACK和ZMQ_BUILD_TESTS，选中了Enable_DRAFT
+vs中使用了UseMultiByteCharacterSet
+
 [ZeroMQ](https://zeromq.org/)
 [GitHub - zeromq/libzmq: ZeroMQ core engine in C++, implements ZMTP/3.1](https://github.com/zeromq/libzmq)
 [bit.ly](http://bit.ly/ZeroMQ-OReilly)
@@ -38,7 +46,7 @@ zmq不是中性carrier，但是自适应各种协议。你可以用zmq写http
 ### IO线程
 使用zmq_ctx_set的时候可以设置线程数量，一个线程一个context，一个context一个socket，一个socket可以处理好多个connection
 ### 消息模式
-zmq可以把大量数据快速高效地发到节点，节点可以是线程，进程，其他endpoint。你无需关系底层通信协议是tcp还是udp还是ipc。它会自动处理节点上线下线，自动把消息放入容器，自动限制容器大小，而且无锁。这一切都依赖于**模式**。
+zmq可以把大量数据快速高效地发到节点，节点可以是线程，进程，其他endpoint。你无需关心底层通信协议是tcp还是udp还是ipc。它会自动处理节点上线下线，自动把消息放入容器，自动限制容器大小，而且无锁。这一切都依赖于**模式**。
 模式有以下这些，request-reply，pub-sub，pipeline，exclusive pair
 以下模式就是connect-bind对
 pub-sub，req-rep，req-router，dealer-rep，dealer-router，dealer-dealer，router-router，push-pull，pair-pair。
@@ -57,7 +65,7 @@ pub-sub，req-rep，req-router，dealer-rep，dealer-router，dealer-dealer，ro
 分块的消息要么全部发送，要么就不发送。而且由于异步发送，必须确保发送的时候这些分块都在内存中有效。
 可以发送一个零长度的消息，就像信号
 发完信息不用zmq_msg_close，接收消息再处理完成后，调用zmq_msg_close释放消息。
-这些API是为了优化而设计的，不是为了好用而设计的，所有用之前确认读过man
+这些API是为了优化而设计的，不是为了好用而设计的，所以使用API之前确认读过man
 ### 多个socket
 如果同时从多个endpoint接收消息，该怎么设计
 最简单的办法是用fan-in模式一对多，pull-push模式下就不能这样用了
@@ -84,11 +92,12 @@ TCP双方握手之后，客户端向服务器发送一个消息的flag是PSH，A
 有些非线程安全
 关于type
 client-server模式，一个server可以连接多个client。client先建立连接，然后双方可以相互通信。server不能主动先向client通信。
-radio-dish模式，一个publisher可以向多个subscriber发送消息。使用了group，多个dish可以加入一个group。草案阶段。
+radio-dish模式，一个publisher可以向多个subscriber发送消息。使用了group，多个dish可以加入一个group。草案阶段。UDP只能用于这个。
 publish-subscrib模式，一个publisher可以向多个subscriber发送消息。subsciber可以选择订阅某些消息。
 pipeline模式，数据依次从流水线的一个阶段发到下一个阶段，每个阶段可以有若干个节点，这些节点共同收到该阶段的数据。
 peer-to-peer模式，一个peer可以connect到别的peer，也可以监听别的peer的connect。草案阶段。
 request-reply模式，客户端发起request，然后服务器reply。一个客户端可以连接到多个服务器。通信顺序只能是一问一答，如果客户端多问，后面的问可能被阻塞。
+router-dealer两个都是异步的
 ## zmq_bind
 形参socket使用本地的endpoint来接收外来的连接，本地的endpoint可以使用tcp/ipc/inproc/udp/vmci/pgm/epgm连接类型，有些类型的地址可以使用通配符。调用bind之后，socket进入了mute状态，建立连接后进入ready状态。在mute状态下，要么阻塞，要么抛弃消息。
 成功返回0
@@ -112,7 +121,7 @@ socket上的消息已经被发送或超时
 关闭一个zmq_context，成功则返回0
 具体步骤是
 除了zmq-close，其余所有阻塞的socket操作会立刻返回ETERM，在socket上后续的任何操作会返回ETERM
-建议客户调用zmq_ctx_term，而zmq_ctx_shutdown掉不掉用都行
+建议客户调用zmq_ctx_term，而zmq_ctx_shutdown调不调用都行
 ## zmq_msg_init
 初始化一个新的空消息结构体，在zmq_msg_recv之前调用
 不要直接访问zmq_msg_t的成员，用函数来访问
@@ -167,3 +176,33 @@ zmq_poll轮询容器，每个元素的socket和events有效，如果接收的事
 # 学习过程
 ## 安装wireshark
 安装了4.4.3，为了能从127.0.0.1抓包，还需要安装tap-windows和Npcap，这是附在wireshark安装包里的
+## router-dealer
+使用router和n个dealer模式，双方都可以主动发送，无需遵循req-rep
+好像可以使用TCP和InProc
+dealer需要自定义一个身份ZMQ_ROUTING_ID
+### 封包
+router接收到的封包是 身份帧 分割帧 其余帧，返回给调用者
+dealer接收到的封包是 其余帧 返回给调用者
+
+dealer发送的封包是 其余帧，无需身份帧
+router发送的封包是 身份帧 分割帧 其余帧
+### 掉线
+dealer使用自动端口或指定端口
+router掉线，dealer未掉线
+router再次上线后，dealer会自动重连，掉线期间dealer发送的包router会再次收到
+说是可以为router设置rcvHWM，但是使用TCP时候HWM可能非常不准确
+dealer掉线，router未掉线
+router发送的时候如果对应身份的dealer掉线，这个消息会被丢弃
+# czmq
+## 版本
+4.2.1 时间2021 01 17
+对应的libzmq版本4.3.5 时间 2023 10 09
+对应的libzmq版本4.3.4 时间  2021 01 17
+实测使用4.3.5的libzmq也可以
+## 编译
+cmake，设置了ENABLE_DRAFTS
+# fileMQ
+## 版本
+master
+## 编译
+cmake，设置了ENABLE_DRAFTS

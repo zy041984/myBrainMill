@@ -3,3 +3,7 @@ QApplication::setStyleSheet为全部程序设置风格
 QWidget::setStyleSheet为某个窗口设置风格
 - 比QPalette更强大，假如想设置QButton背景为红色，StyleSheet能保证在所有style下，QButton背景都是红色。
 - 无需继承QStyle，可以方便地为程序设定另一种风格
+
+先不要考虑继承
+每个控件设置自己的StyleSheet
+可以从文件读也可以从资源中读，调试的时候从文件读，改好效果后再从资源中读

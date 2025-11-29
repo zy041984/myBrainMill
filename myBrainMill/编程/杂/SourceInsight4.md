@@ -2,3 +2,6 @@
 
 打开`C:\ProgramData\Source Insight\4.0\si4.lic`，把`Expiration="2023-12-20"`修改为久远日期
 过一段时期过了30天后，把`Date="2023-11-20"`修改为前一天的，又能用
+
+# 第二种方法
+[GitHub - YukiIsait/SourceInsight4Patch: Auto-authorizes Source Insight 4 without modifying any files. 自动授权 Source Insight 4 而无需修改任何文件。](https://github.com/YukiIsait/SourceInsight4Patch)

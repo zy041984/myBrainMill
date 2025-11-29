@@ -270,11 +270,28 @@ osg场景坐标系与ECEF坐标系各轴方向相同
 构造了GLCamera到osg场景坐标系的变换矩阵
 数学上的$M\mathop{{}}\nolimits_{{GLCamera}}^{{OSG}}$
 # osg::Camera::getViewMatrix
-返回的是GLCamera到osg场景坐标系的变换矩阵
-数学上的$M\mathop{{}}\nolimits_{{GLCamera}}^{{OSG}}$
+返回的数学矩阵是GLCamera到osg场景坐标系的变换矩阵，即数学上的$M\mathop{{}}\nolimits_{{GLCamera}}^{{OSG}}$，osg存储为转置
+# osg::Camera::getProjectionMatrix
+返回的数学矩阵是GLNDC到GLCamera坐标系的变换矩阵，即数学上的$M\mathop{{}}\nolimits_{{GLNDC}}^{{GLCamera}}$，osg存储为转置
+# osg::Viewport::computeWindowMatrix
+返回的数学矩阵是窗口到GLNDC坐标系的变换矩阵，即数学上的$M\mathop{{}}\nolimits_{{window}}^{{GLNDC}}$，osg存储为转置
+OSG视口左下角为原点
 # osgGA::OrbitManipulator::getMatrix
-返回的是osg场景坐标系到GLCamera的变换矩阵
-数学上的$M\mathop{{}}\nolimits_{{OSG}}^{{GLCamera}}$
+返回的数学矩阵是osg场景坐标系到GLCamera的变换矩阵，即数学上的$M\mathop{{}}\nolimits_{{OSG}}^{{GLCamera}}$，osg存储为转置
+# 设置场景不要自动计算近远裁剪面
+```
+struct myCPM :public osg::CullSettings::ClampProjectionMatrixCallback
+{
+	virtual bool clampProjectionMatrixImplementation(osg::Matrixf& projection, double& znear, double& zfar) const { return true; }
+	virtual bool clampProjectionMatrixImplementation(osg::Matrixd& projection, double& znear, double& zfar)const { return true; }
+};
+viewer->getCamera()->setClampProjectionMatrixCallback(new myCPM);
+```
+还有个办法
+```
+cam->setComputeNearFarMode(osg::Camera::DO_NOT_COMPUTE_NEAR_FAR);
+cam->setCullingMode(osg::Camera::ENABLE_ALL_CULLING);
+```
 # osgEarth::EarthManipulator的矩阵变换过程：
 1. 平移到_center
 2. 旋转_centerRotation,应该是把OSG场景转到本地ENU

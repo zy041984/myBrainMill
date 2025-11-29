@@ -12,8 +12,82 @@ https://learn.microsoft.com/zh-CN/windows/win32/inputdev/user-input
 键盘布局
 窗口如何获得键盘焦点
 如何模拟键盘输入，发出一个假消息
+##### 2.3.12.2.3 原始输入
+[原始输入 - Win32 apps | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/win32/inputdev/raw-input)
 # 12 图像和游戏
+# 13 网络和internet
+## 13.23 WebSocket
+## 13.29 Windows套接字2
+通过网络传输数据，与协议无关
+### 新增功能
+[Windows 套接字的新增内容 - Win32 apps | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/win32/winsock/what-s-new-for-windows-sockets-2)
+针对windows8和server2012等有新增函数
+### 网络协议支持
+### 关于Winsock
+#### 编程注意事项
+##### 体系结构
+### 使用Winsock
+#### winsock入门
+在`Samples\Win7Samples\netds\winsock`中有几个例子，性能从高到低
+- Iocp
+    该文件夹包含三个使用 I/O 完成端口的示例程序。 程序包括：使用 [**WSAAccept**](https://learn.microsoft.com/zh-cn/windows/win32/api/Winsock2/nf-winsock2-wsaaccept) 函数的 Winsock 服务器`iocpserver`;使用 [**AcceptEx**](https://learn.microsoft.com/zh-cn/windows/win32/api/mswsock/nf-mswsock-acceptex) 函数的 Winsock 服务器`iocpserverex`;以及用于测试这些服务器之一的简单多线程 Winsock 客户端`iocpclient`。
+    服务器程序支持多个客户端使用 TCP/IP 进行连接，并发送服务器随后回显到客户端的任意大小的数据缓冲区。 为方便起见，开发了一个简单的客户端程序 `iocpclient`，用于连接并持续将数据发送到服务器，以使用多个线程来施加压力。 使用 I/O 完成端口的 Winsock 服务器提供最高性能。
+- 重叠
+    此文件夹包含使用重叠 I/O 的示例服务器程序。 示例程序使用 [**AcceptEx**](https://learn.microsoft.com/zh-cn/windows/win32/api/mswsock/nf-mswsock-acceptex) 函数和重叠 I/O 有效地处理来自客户端的多个异步连接请求。 服务器使用 **AcceptEx** 函数对单线程 Win32 应用程序中的不同客户端连接进行多路复用。 使用重叠 I/O 可实现更大的可伸缩性。
+- WSAPoll
+    此文件夹包含演示如何使用 [**WSAPoll**](https://learn.microsoft.com/zh-cn/windows/win32/api/winsock2/nf-winsock2-wsapoll) 函数的基本示例程序。 组合的客户端和服务器程序是非阻塞的，并使用 **WSAPoll** 函数确定何时可以在不阻止的情况下发送或接收。 此示例用于说明，不是高性能服务器。
+- 简单
+    此文件夹包含三个演示服务器使用多个线程的基本示例程序。 这些程序包括：一个简单的 TCP/UDP 服务器; `simples`一个仅限 TCP 的服务器， `simples_ioctl`它使用 Win32 控制台应用程序中的 [**select**](https://learn.microsoft.com/zh-cn/windows/win32/api/Winsock2/nf-winsock2-select) 函数来支持多个客户端请求;以及用于测试服务器的客户端 TCP/UDP 程序 `simplec`。 服务器演示了如何使用多个线程来处理多个客户端请求。 此方法存在可伸缩性问题，因为会为每个客户端请求创建单独的线程。
+- accept
+    此文件夹包含基本示例服务器和客户端程序。 服务器演示如何使用 [**select**](https://learn.microsoft.com/zh-cn/windows/win32/api/Winsock2/nf-winsock2-select) 函数使用非阻止接受，或使用 [**WSAAsyncSelect**](https://learn.microsoft.com/zh-cn/windows/win32/api/winsock/nf-winsock-wsaasyncselect) 函数使用异步接受。 此示例用于说明，不是高性能服务器。
+#### 服务器与客户端
+##### 服务器
 
+1. 初始化 Winsock。
+2. 创建套接字。
+3. 绑定套接字。
+4. 侦听客户端的套接字。
+5. 接受来自客户端的连接。
+6. 接收和发送数据。
+7. 断开连接。
+
+[](https://learn.microsoft.com/zh-cn/windows/win32/winsock/about-clients-and-servers#client)
+
+##### 客户端
+
+1. 初始化 Winsock。
+2. 创建套接字。
+3. 连接到该服务器。
+4. 发送和接收数据。
+5. 断开连接。
+##### 客户端断开
+不需要发送，则
+当客户端将数据发送到服务器后，可以调用`shutdown`函数，
+指定SD_SEND关闭套接字的发送端。 
+这允许服务器释放此套接字的某些资源。 
+客户端应用程序仍可接收套接字上的数据
+
+- 一旦调用`shutdown`函数来禁用发送和/或接收，就没有方法可以重新为现有套接字连接启用发送或接收。
+https://learn.microsoft.com/zh-cn/windows/win32/api/winsock/nf-winsock-shutdown
+- 为了确保在连接的套接字关闭之前发送和接收所有数据，应用程序应在调用`closesocket`之前使用`shutdown`来关闭连接。
+- 客户端应用程序完成接收数据后，将调用`closesocket`函数以关闭套接字。
+https://learn.microsoft.com/zh-cn/windows/win32/api/winsock/nf-winsock-closesocket
+- 当套接字之间的连接断开时，应放弃已连接的套接字，并创建新的套接字。 当在连接的套接字上出现问题时，应用程序必须放弃套接字并再次创建套接字，以便返回到稳定点。
+
+总结accept例子
+client，使用`getaddrinfo`来获得可以使用的地址信息集合。遍历这个集合，看看哪个地址信息可以创建`socket`。然后用这个`socket`进行`connect`。
+如果服务器没上线，`connect`会失败
+如果服务器上线，`connect`会成功，然后就可以发送接收了。
+例子里客户端先发送，再`shutdown(SD_SEND)`，再接收。最后`closesocket`
+
+服务器则是`listen`之后，设置非阻塞，然后用`select`监听收到的信息，形成`listenning`或`recv`两个分支。
+分支`listenning`是`accept`成功接收客户端的连接请求，并返回一个socket，为旧的socket设置非阻塞。
+分支`recv`是阻塞式调用recv接收客户的数据，`select`发现可以有数据接收，就会进入这个分支，然后`recv`就可以接收数据了。
+如果客户端发送了`shutdown`，服务器的`select`也可以进入`recv`分支，并且`recv`返回0。服务器知道客户端不再发送，就`closesocket`关闭新生成的socket,没有调用shutdown
+然后服务器再次进入`select`，可以再次等待新的客户端上线`connect`
+
+
+如果客户端send后没有shutdown就直接close，服务器的recv报错100054。然后服务器会关闭通信的socket，还可以再次等待新的客户端上线
 # 15 系统服务
 ## 15.7 DLL
 进程之间共享dll的代码，但是有各自的dll的数据。进程加载dll后把它映射到自己的虚拟地址空间。
@@ -121,3 +195,36 @@ GDI Object，进行图形绘制，如brush，bitmap，dc，font，pen，palette�
 - GDI型Object只能有一个handle，不能被子进程继承或其他进程复制。创建该object的进程才可以使用该object
 - 内核Object可以创建多个handle，可以被子进程继承或其他进程复制，只要某进程对该object有访问权限。多个handle的意义在于每个handle可以有不同的访问权限。
 - 内核file object稍有不同，一个硬盘或内存中的file可以有多个file object，每个file object有一个handle，每个进程可以对一个file有多个这样的file object即handle。
+
+统一的设备属性模型
+[统一的设备属性模型 - Windows drivers | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/unified-device-property-model--windows-vista-and-later-)
+
+使用cm系列函数
+[设备和驱动程序安装参考 - Win32 apps | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/win32/api/_devinst/)
+
+# 各种id
+## 设备id
+device-id，设备id，由设备的 _枚举器_ (其 [总线驱动程序](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/kernel/bus-drivers)) 报告的字符串。 一个设备只有一个设备 ID。 设备 ID 的格式与 [硬件 ID](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/hardware-ids) 相同。
+## 硬件id
+hardware-id，硬件id，供应商定义的标识字符串。Windows 使用它来将设备匹配到驱动程序包，如果一个驱动程序包声明了某个硬件ID，则这个驱动程序包可以支持具有该 ID 的设备。
+例PCI\VEN_1000&DEV_0001&SUBSYS_00000000&REV_02
+## 实例id
+instance-id，实例id，是由设备的_枚举器_报告的字符串，并将本设备与计算机上的其他相同类型的设备区分开来。包含序列号信息（如果受基础总线支持）或某种位置信息。
+## 设备实例id
+device-instance-id，设备实例id，系统提供的设备标识字符串，用于在系统中唯一标识设备。使用设备ID、[实例 ID](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/instance-ids) 值和 [**DEVICE_CAPABILITIES**](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_capabilities) 结构的 **UniqueID** 成员计算出来
+例
+一个实例 ID ("1&08") 连接到一个 PCI 设备的设备 ID：
+`PCI\VEN_1000&DEV_0001&SUBSYS_00000000&REV_02\1&08`
+## 容器id
+容器 ID 是系统提供的设备标识字符串，用于唯一对与计算机上安装的单函数或多功能设备关联的功能设备进行分组。
+计算机中安装的物理设备的每个实例都有一个唯一的容器 ID。 表示该物理设备实例上的函数的所有开发节点共享相同的容器 ID
+为设备生成容器 ID 的首选方法是基于特定于总线的唯一 ID。 这是生成容器 ID 的最精确、最可靠的方法。
+# 统一的设备属性模型
+统一的设备属性模型，描述了 _设备实例_、 [设备设置类](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-setup-classes)、 [设备接口类](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-interface-classes)和设备 _接口_
+[设备设置类](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-setup-classes) 提供了一种机制，用于对以相同方式安装和配置的设备进行分组。 例如，所有 CD-ROM 驱动器都属于 CDROM 设置类。这个类感觉就是安装时候用的。
+
+[设备接口类](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-interface-classes) 提供了一种机制，用于根据共享特征或功能对设备进行分组。 驱动程序和用户应用程序可以注册以接收属于特定接口类的任何设备的到达或删除通知，而不是跟踪单个设备在系统中的状态。这个类感觉是用户接收数据时用的。
+
+每个设备设置类都有一个关联的 GUID。 系统定义的安装类 GUID 在 _Devguid.h_ 中定义，通常具有 GUID_DEVCLASS__Xxx_ 形式的符号名称。
+
+用户模式代码可以使用 [**CfgMgr32** 函数](https://learn.microsoft.com/zh-cn/windows/win32/api/cfgmgr32/) (例如， [CM_Get_Device_Interface_List](https://learn.microsoft.com/zh-cn/windows/win32/api/cfgmgr32/nf-cfgmgr32-cm_get_device_interface_listw)) 或 **SetupDi**_Xxx_ 函数 (请参阅 [SetupDi 设备接口函数](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/using-device-installation-functions#ddk-setupdi-device-interface-functions-dg)) 以了解已注册的已启用的设备接口。 然后可以使用 I/O API（如 [CreateFile](https://learn.microsoft.com/zh-cn/windows/win32/api/fileapi/nf-fileapi-createfilew) ）获取设备的句柄，以便向其发送 I/O。 若要获取有关启用和禁用设备接口以及如何响应这些操作的通知，请参阅 [注册设备接口到达和设备删除通知](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/registering-for-notification-of-device-interface-arrival-and-device-removal)。

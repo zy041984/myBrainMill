@@ -27,3 +27,64 @@ Device对象，描述DirectInputDevice对象上的一个按钮，摇杆等
 2. joystick的axis数据要自行判断死区和饱和区。也可以使用CPOINT结构来指定axis的输出曲线
 # 版本
  IDirectInputDevice8接口中需要指定基于DirectX的版本号，宏DIRECTINPUT_VERSION默认为0x0080，
+# 查询GUID和连接状态
+GUID可以用DIDEVICEINSTANCE::guidInstance获得
+`LPDIRECTINPUT8::GetDeviceStatus`可以查询当前手柄连接状态,形参为GUID。
+poll函数不能在循环中无脑调用，最好先调用`LPDIRECTINPUT8::GetDeviceStatus`，手柄当前正常连接，再调用`LPDIRECTINPUTDEVICE8::poll`和`LPDIRECTINPUTDEVICE8::GetDeviceState`获得手柄数据
+# 配置摇杆
+设置axis为abs
+```
+DIPROPDWORD dipdw;
+dipdw.diph.dwSize = sizeof(DIPROPDWORD);
+dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+dipdw.diph.dwObj = 0; // device property 
+dipdw.diph.dwHow = DIPH_DEVICE;
+hr = mJoystick[i]->GetProperty(DIPROP_AXISMODE, &dipdw.diph);
+if (hr != DI_OK)
+{
+	spdlog::info("GetProperty failed joystick {}", i);
+	return;
+}
+if (dipdw.dwData != DIPROPAXISMODE_ABS)
+{
+	DIPROPDWORD dipdw;
+	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
+	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+	dipdw.diph.dwObj = 0; // device property 
+	dipdw.diph.dwHow = DIPH_DEVICE;
+	dipdw.dwData = DIPROPAXISMODE_ABS;
+	hr = mJoystick[i]->SetProperty(DIPROP_AXISMODE, &dipdw.diph);
+	if (hr != DI_OK)
+	{
+		spdlog::info("SetProperty DIPROP_AXISMODE failed joystick {}", i);
+		return;
+	}
+}
+```
+设置axis_X的deadzone
+```
+	int dz{ 200 };
+	DIPROPDWORD dipdw;
+	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
+	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+	dipdw.diph.dwObj = DIJOFS_X;
+	dipdw.diph.dwHow = DIPH_BYOFFSET;
+	dipdw.dwData = dz;
+	hr = mJoystick[i]->SetProperty(DIPROP_DEADZONE, &dipdw.diph);
+	if (hr != DI_OK)
+	{
+		spdlog::info("SetProperty DIPROP_DEADZONE x failed joystick{}", i);
+		return;
+	}
+```
+# 问题
+插两个USB手柄，调用EnumDevices，在回调函数中可以依次获得每个手柄的DIDEVICEINSTANCE::guidInstance。拔掉第一个手柄，发现第二个手柄的DIDEVICEINSTANCE::guidInstance变成了第一个手柄的。
+即不能通过DIDEVICEINSTANCE::guidInstance来识别当前是第几个手柄。
+deepseek解释说这是DirectInput设计的正常行为，主要原因如下：
+`guidInstance`并非基于设备物理特性生成，而是由系统运行时动态分配。其生成算法包含：
+ 设备连接顺序
+ 当前系统设备树状态
+ 设备在HID堆栈中的位置
+所以，由于设备树重组效应，当拔掉一个设备时，Windows会重新分配设备句柄
+如果想解决这个问题，就需要通过`SetupDiGetDevicePropertyW(hDevInfo, &devInfoData, &DEVPKEY_Device_InstanceId, &propertyType, buffer.data(), size, nullptr, 0)`来获得设备实例路径，通过这个来识别设备
+或者GetRawInputDeviceInfo来自行获得设备输入
