@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "e1ee4c50c9857d44",
+        "id": "62251adefb76a43d",
         "type": "tabs",
         "children": [
           {
-            "id": "fcca055aa5028e2c",
+            "id": "f3b984535d681b8c",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -21,8 +21,7 @@
               "title": "法语生词本导入用"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -161,7 +160,6 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "bases:创建新数据库": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
@@ -170,34 +168,34 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "fcca055aa5028e2c",
+  "active": "f3b984535d681b8c",
   "lastOpenFiles": [
+    "摘要/健康/正念.md",
+    "法语生词本导入用.md",
+    "编程/Qt/Qt Installer Framework.md",
+    "摘要/书法.md",
+    "编程/3rdParty/ZeroMQ.md",
+    "编程/3rdParty/yaml-cpp.md",
+    "编程/3rdParty/vrpn.md",
+    "编程/3rdParty/spdLog.md",
     "编程/3rdParty/ProtoBuf.md",
     "编程/3rdParty/log4cpp.md",
     "编程/3rdParty/libarchive.md",
-    "编程/3rdParty/spdLog.md",
-    "法语生词本导入用.md",
-    "WebSocket.md",
-    "https.md",
-    "GIS/Geoserver.md",
-    "摘要/文学/哈利波特.md",
-    "摘要/科学/SELF.md",
-    "摘要/科学/象与骑象人.md",
-    "摘要/健康/青少年运动员体能训练.md",
-    "摘要/健康/正念.md",
-    "摘要/书法.md",
+    "编程/Windows/XInput.md",
     "输入方案/reStructuredText.md",
     "输入方案/Sphinx.md",
+    "摘要/健康/青少年运动员体能训练.md",
+    "摘要/科学/象与骑象人.md",
+    "摘要/科学/SELF.md",
+    "摘要/文学/哈利波特.md",
+    "WebSocket.md",
+    "https.md",
+    "编程/杂/VS Code.md",
+    "GIS/Geoserver.md",
     "输入方案/obsidian-md.md",
     "编程/3rdParty/国际化库.md",
     "编程/3rdParty/ASIO.md",
     "编程/3rdParty/assimp.md",
-    "编程/3rdParty/ceres.md",
-    "编程/3rdParty/CTK.md",
-    "编程/3rdParty/doxygen.md",
-    "编程/3rdParty/FFMpeg.md",
-    "编程/3rdParty/giflib.md",
-    "编程/3rdParty/vrpn.md",
     "编程/Qt/QFontMetrics2.png",
     "编程/Qt/QFontMetrics1.jpg",
     "编程/3rdParty/How to Make a GIF in GIMP.mhtml",
