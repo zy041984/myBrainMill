@@ -85,3 +85,5 @@ D:\cmake-3.26.5-windows-x86_64\bin\cmake --build "./libpng-1.6.40-build" --confi
 D:\cmake-3.26.5-windows-x86_64\bin\cmake --install "./libpng-1.6.40-build" --prefix ".\libpng" --config Debug
 D:\cmake-3.26.5-windows-x86_64\bin\cmake --install "./libpng-1.6.40-build" --prefix ".\libpng" --config Release
 ```
+# cmakeList.txt怎么调试输出
+使用`message(STATUS "变量值: ${VARIABLE}")`
